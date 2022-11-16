@@ -1,13 +1,16 @@
 import os.path
+import math
 import torch
 import numpy as np
 import pandas as pd
+import seaborn as sns
 import matplotlib.pyplot as plt
 from tqdm import tqdm
 from random import randint
 from turtle import shape
 from algorithm import Wave_Route
 from perlin_noise import PerlinNoise
+from random import uniform, randint
 
 
 xpix, ypix = 64, 64
@@ -18,25 +21,58 @@ def validate_coords(pic, y, x):
         return True
     return False
 
+def rain_gen():
+    
+    pic = np.zeros((64, 64)) # size of pic matrix
+    max_drop_width = 2 # right border of drop width, min is always is 1
+    max_drop_height = 28 # right border of drop height, min is always is 1
+    drop_margin = 2 # margin around of drop, min is always is 1
+    section_width = 64 # width of a section
+    section_height = max_drop_height + drop_margin*2 + 1 # section height
+
+
+    for section in range(math.ceil(pic.shape[-1]/section_height)):
+        
+        section_frenq = uniform(1, 2)
+        pic[section * section_height, :] = np.array([[0]*section_width])
+        
+        for x in range(0, pic.shape[0], drop_margin):
+            
+            y_left = section_frenq * np.cos((x)*section_frenq)
+            y_right = section_frenq * np.cos((x+1)*section_frenq)
+
+            if y_left >=0 and y_right <= 0:
+                start_drop_y = randint(section * section_height, (section + 1) * section_height - max_drop_height + drop_margin*2 + 1) + drop_margin
+                end_drop_y = start_drop_y + randint(1, max_drop_height + 1)
+
+                if end_drop_y > pic.shape[-1] - 1:
+                    end_drop_y = pic.shape[-1] - 1
+                
+                pic[start_drop_y:end_drop_y, x] = np.array([[1]*(end_drop_y - start_drop_y)])
+
+    return pic
 
 def generator():
     
-    noise = PerlinNoise(octaves=12)
+    # noise = PerlinNoise(octaves=12)
     
-    pic = np.zeros((0 ,xpix))
-    for i in range(xpix):
-        row = np.array([])
-        for j in range(ypix):
+    # pic = np.zeros((0 ,xpix))
+    # for i in range(xpix):
+    #     row = np.array([])
+    #     for j in range(ypix):
         
-            noise_val = noise([i/xpix, j/ypix])
+    #         noise_val = noise([i/xpix, j/ypix])
             
-            if noise_val < -0.1: # point of switch from obstacle to free space
-                noise_val = -1
-            else:
-                noise_val = 0
+    #         if noise_val < -0.1: # point of switch from obstacle to free space
+    #             noise_val = -1
+    #         else:
+    #             noise_val = 0
             
-            row = np.append(row, noise_val)
-        pic = np.append(pic, [row], axis=0)
+    #         row = np.append(row, noise_val)
+    #     pic = np.append(pic, [row], axis=0)
+    
+    pic = (rain_gen() + rain_gen().transpose()).clip(0, 1)
+    pic[pic == 1] = -1
 
     validation = False
     while validation == False:
@@ -56,7 +92,9 @@ def generator():
     pic_copy[end_y][end_x] = -3
 
     wave = Wave_Route(pic, start_y, start_x, end_y, end_x)
-
+    pic_copy = np.abs(pic_copy)
+    pic_copy = pic_copy/np.max(pic_copy)
+    
     return pic_copy, wave.output()
 
  
@@ -65,13 +103,13 @@ path_solution = "D:\PROJECTS\Python_projects\PythonMain\data_solved"
 
 files = []
 
-for i in tqdm(range(1000)):
+for i in tqdm(range(25000)):
     
     task, solution = 0, 0
     task, solution = generator()
-    
+
     name = i
-    # print(name, "\n")
+
     task = np.expand_dims(task, axis=-1)
     tmp = task
     task = np.append(task, tmp, axis = -1)
@@ -82,20 +120,6 @@ for i in tqdm(range(1000)):
     
     files.append([os.path.join(path_task, str(name)), os.path.join(path_solution, str(name))])
     
-    # task = pd.DataFrame(data=task.astype(float))
-    # task.to_csv(os.path.join(path_task, str(name)+".csv"), sep=' ', header=False, float_format='%.2f', index=False, mode="+w")
-    
-    # solution = pd.DataFrame(data=solution.astype(float))
-    # solution.to_csv(os.path.join(path_task, str(name)+".csv"), sep=' ', header=False, float_format='%.2f', index=False, mode="+w")
 
 df = pd.DataFrame(data=files, columns=['source', 'target'])
 df.to_csv("D:\PROJECTS\Python_projects\PythonMain\data.csv")
-
-# # test1 = torch.load(os.path.join(path_task, str(0))).numpy()
-# f = plt.figure()
-# # f.add_subplot(1,2,1)
-# # plt.imshow(test1, cmap='gray') 
-# test2 = torch.load(os.path.join(path_solution, str(0))).numpy()
-# f.add_subplot(1,2,2)
-# plt.imshow(test2, cmap='gray')
-# plt.show()

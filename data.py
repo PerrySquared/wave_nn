@@ -28,16 +28,3 @@ class WaveDataset(Dataset):
     def __getitem__(self, idx: int):
         return self.source[idx], self.target[idx]
 
-
-
-# torch.set_printoptions(edgeitems=1000)
-# source, target = next(iter(dataloader))
-
-# test1 = source.squeeze().numpy()
-# f = plt.figure()
-# f.add_subplot(1,2,1)
-# plt.imshow(test1, cmap='gray') 
-# test2 = target.squeeze().numpy()
-# f.add_subplot(1,2,2)
-# plt.imshow(test2, cmap='gray')
-# plt.show()
