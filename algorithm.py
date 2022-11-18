@@ -139,8 +139,6 @@ class Wave_Route:
         row_len, column_len = self.a.shape
         a_zeros = np.zeros((row_len, column_len), dtype=float)
         
-        #print("MATRIX WITH START AND END\n", self.a, "\n")
-        
         array, wave_number, success = self.wave_generator(self.a, self.start_y, self.start_x)
         
         if success == False:
@@ -149,28 +147,4 @@ class Wave_Route:
         path = self.path_backtracking(array, self.end_y, self.end_x, wave_number)
         array_output = self.final_route(a_zeros, path)
         
-        return array_output
-
-      
-# a = np.array([
-#     [0, 0, 0, 0, 0, 0, 0],
-#     [0, 0, -1, 0, 0, 0, 0],
-#     [-1, 0, -1, -1, -1, 0, 0], 
-#     [0, -1, -1, -1, 0, 0, 0],
-#     [0, 0, 0, -1, 0, 0, 0]
-# ])
-
-# # a_copy = np.copy(a)
-
-# print("enter start Y and X values")
-# s_y, s_x = map(int, input().split())
-# print("enter end Y and X values")
-# e_y, e_x = map(int, input().split())
-
-# print("\n\n INITIAL MATRIX\n", a, "\n")
-
-# array, wave_number = wave_generator(a, start_y, start_x)
-# path = path_backtracking(array, end_y, end_x, wave_number)
-# output = final_route(a_copy, path)
-# wave1 = Wave_Route(a,s_y,s_x,e_y,e_x)
-# print("\n OUTPUT \n", wave1.output(), "\n")
+        return array_output, wave_number
