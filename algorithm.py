@@ -139,8 +139,6 @@ class Wave_Route:
         row_len, column_len = self.a.shape
         a_zeros = np.zeros((row_len, column_len), dtype=float)
         
-        #print("MATRIX WITH START AND END\n", self.a, "\n")
-        
         array, wave_number, success = self.wave_generator(self.a, self.start_y, self.start_x)
         
         if success == False:
@@ -149,4 +147,4 @@ class Wave_Route:
         path = self.path_backtracking(array, self.end_y, self.end_x, wave_number)
         array_output = self.final_route(a_zeros, path)
         
-        return array_output
+        return array_output, wave_number

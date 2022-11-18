@@ -98,16 +98,18 @@ def generator():
     return pic_copy, wave.output()
 
  
-path_task = "D:\PROJECTS\Python_projects\PythonMain\data_task"
-path_solution = "D:\PROJECTS\Python_projects\PythonMain\data_solved"
+path_task = "data_task"
+path_solution = "data_solved"
 
 files = []
+wave_lengths = []
 
-for i in tqdm(range(25000)):
+for i in tqdm(range(50000)):
     
-    task, solution = 0, 0
-    task, solution = generator()
+    task, solution, wave_number = 0, 0, 0
+    task, solution, wave_number = generator()
 
+    wave_lengths.append(wave_number)
     name = i
 
     task = np.expand_dims(task, axis=-1)
@@ -121,5 +123,7 @@ for i in tqdm(range(25000)):
     files.append([os.path.join(path_task, str(name)), os.path.join(path_solution, str(name))])
     
 
+print("\n", "max_length = ", wave_lengths.max(), "\n", "min_length = ", wave_lengths.min(), "\n", "lengths_mean = ", wave_lengths.mean(), "\n")
+
 df = pd.DataFrame(data=files, columns=['source', 'target'])
-df.to_csv("D:\PROJECTS\Python_projects\PythonMain\data.csv")
+df.to_csv("data.csv")

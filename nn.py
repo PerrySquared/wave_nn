@@ -97,7 +97,7 @@ if __name__ == '__main__':
     set_seed()
 
 
-    data_train, data_test = train_test_split(pd.read_csv("D:\PROJECTS\Python_projects\PythonMain\data.csv"), train_size=0.8, test_size=0.2, shuffle=False)
+    data_train, data_test = train_test_split(pd.read_csv("data.csv"), train_size=0.9, test_size=0.1, shuffle=False)
 
 
     dataset_train = WaveDataset(data_train)
@@ -107,14 +107,16 @@ if __name__ == '__main__':
 
 
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    print(device)
     
-    # aux_params = dict(
-    #     dropout = 0.2,
-    #     classes=2,
-    # )
+    aux_params = dict(
+        dropout = 0.2,
+        classes=1,
+        activation="tanh"
+    )
     
-    model = smp.Unet(encoder_name="resnet152", encoder_weights="imagenet",
-                     in_channels=3, classes=1).to(device)
+    model = smp.Unet(encoder_name="resnet152", encoder_weights="imagenet", encoder_depth=5,
+                     in_channels=3, decoder_attention_type="scse", aux_params=aux_params).to(device)
     
     optimizer = torch.optim.Adam(model.parameters(), lr=0.001, weight_decay=1e-6)
     scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=7000, eta_min=1e-6)
@@ -139,9 +141,8 @@ if __name__ == '__main__':
             source, mask = source.to(device), mask.to(device)
 
             out = model(source)
-            #print(type(out))
             mask = mask.unsqueeze(dim=1).float()
-            loss = criterion(out, mask)
+            loss = criterion(out[0].float(), mask)
 
             loss.backward()
             optimizer.step()
@@ -156,15 +157,16 @@ if __name__ == '__main__':
                     source, mask = source.to(device), mask.to(device)
                     out = model(source)
                     
-                    temp_mask = mask.cpu()
-                    temp_out = out.cpu()
+                    # print(out[0], "\n=====", out[1])
+                    # temp_mask = mask.cpu()
+                    # temp_out = out.cpu()
 
-                    valid_loss = np.append(valid_loss, dice_coef(mask, out).cpu().detach().numpy())
-        if i%10==0 :
-            plt.imshow(temp_mask.permute(1, 2, 0).squeeze())
-            plt.show()      
-            plt.imshow(  temp_out.permute(2, 3, 1, 0).squeeze().squeeze()  )
-            plt.show()
+                    valid_loss = np.append(valid_loss, dice_coef(mask, out[0].float()).cpu().detach().numpy())
+        # if i%50==0 :
+        #     plt.imshow(temp_mask.permute(1, 2, 0).squeeze())
+        #     plt.show()      
+        #     plt.imshow(  temp_out.permute(2, 3, 1, 0).squeeze().squeeze()  )
+        #     plt.show()
 
         metric = np.append(metric, [[np.mean(train_loss), np.mean(valid_loss)]], axis=0)
 
@@ -172,6 +174,7 @@ if __name__ == '__main__':
             f'\n---> {i+1}\033[95m LR:\033[0m {optimizer.param_groups[0]["lr"]:3e}' +
             f'\n|\033[94m Loss_train:\033[0m {metric[-1, 0]:.5}' +
             f'\n|\033[96m Acc_valid:\033[92m {metric[-1, 1]:.5}' +
-            '\n--------------------------------------------------------------------------------\033[0m')
+            '\n----------------------\033[0m')
 
-
+    plt.plot(epochs, metric)
+    plt.show()
