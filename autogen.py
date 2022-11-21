@@ -74,18 +74,19 @@ def generator():
     pic = (rain_gen() + rain_gen().transpose()).clip(0, 1)
     pic[pic == 1] = -1
 
+
     validation = False
     while validation == False:
         start_x = randint(0, xpix - 1)
         start_y = randint(0, ypix - 1)
         validation = validate_coords(pic, start_y, start_x)
 
-
     validation = False
     while validation == False:
         end_x = randint(0, xpix - 1)
         end_y = randint(0, ypix - 1)
         validation = validate_coords(pic, end_y, end_x)
+
 
     pic_copy = pic.copy()
     pic_copy[start_y][start_x] = -2
@@ -95,7 +96,7 @@ def generator():
     pic_copy = np.abs(pic_copy)
     pic_copy = pic_copy/np.max(pic_copy)
     
-    return pic_copy, wave.output()
+    return pic_copy, wave.output()[0], wave.output()[1]
 
  
 path_task = "data_task"
@@ -123,7 +124,8 @@ for i in tqdm(range(50000)):
     files.append([os.path.join(path_task, str(name)), os.path.join(path_solution, str(name))])
     
 
-print("\n", "max_length = ", wave_lengths.max(), "\n", "min_length = ", wave_lengths.min(), "\n", "lengths_mean = ", wave_lengths.mean(), "\n")
+wave_lengths = np.array(wave_lengths)
+#print("\n", "max_length = ", wave_lengths.max(), "\n", "min_length = ", wave_lengths.min(), "\n", "lengths_mean = ", wave_lengths.mean(), "\n")
 
 df = pd.DataFrame(data=files, columns=['source', 'target'])
 df.to_csv("data.csv")
