@@ -88,12 +88,11 @@ class Wave_Route:
                             break
                          
             if total_positions == 0:
-                # print("NO ROUTE FOUND")
                 return  array, wave_number - 1, False
                         
             total_positions = 0                         
             wave_number += 1         
-            
+
         return array, wave_number - 1, True
 
 
@@ -142,7 +141,7 @@ class Wave_Route:
         array, wave_number, success = self.wave_generator(self.a, self.start_y, self.start_x)
         
         if success == False:
-            return a_zeros
+            return a_zeros, wave_number
         
         path = self.path_backtracking(array, self.end_y, self.end_x, wave_number)
         array_output = self.final_route(a_zeros, path)

@@ -110,7 +110,7 @@ if __name__ == '__main__':
     print(device)
     
     aux_params = dict(
-        dropout = 0.2,
+        dropout = 0.15,
         classes=1,
         activation="tanh"
     )
@@ -125,10 +125,12 @@ if __name__ == '__main__':
     def criterion(input_masks, target_masks):
         return DiceLoss(input_masks,target_masks)
 
-    epochs = 200
 
     metric = np.zeros((0, 2))
-
+    image_number = 0
+    
+    epochs = 40
+    
     for i in range(epochs):
         train_loss = np.array([])
         valid_loss = np.array([])
@@ -153,21 +155,27 @@ if __name__ == '__main__':
         model.eval()
 
         with torch.no_grad():
+            
             for source, mask in dataloader_test:
                     source, mask = source.to(device), mask.to(device)
                     out = model(source)
                     
                     # print(out[0], "\n=====", out[1])
-                    # temp_mask = mask.cpu()
-                    # temp_out = out.cpu()
+                    temp_out = out[0].cpu()
 
                     valid_loss = np.append(valid_loss, dice_coef(mask, out[0].float()).cpu().detach().numpy())
-        # if i%50==0 :
-        #     plt.imshow(temp_mask.permute(1, 2, 0).squeeze())
-        #     plt.show()      
-        #     plt.imshow(  temp_out.permute(2, 3, 1, 0).squeeze().squeeze()  )
-        #     plt.show()
-
+                    
+            image_number+=1
+            image = temp_out.permute(2, 3, 1, 0).squeeze().squeeze()
+            image = torch.where(image > 0.5, 1.0, 0.0)
+            image = torch.nn.functional.softmax(image, 1)
+            image = image > 0.9
+            
+            plt.imshow(image)
+            plt.savefig(os.path.join("data_out", str(image_number)), dpi=300)
+        
+        plt.close()  
+            
         metric = np.append(metric, [[np.mean(train_loss), np.mean(valid_loss)]], axis=0)
 
         print(
@@ -176,5 +184,5 @@ if __name__ == '__main__':
             f'\n|\033[96m Acc_valid:\033[92m {metric[-1, 1]:.5}' +
             '\n----------------------\033[0m')
 
-    plt.plot(epochs, metric)
-    plt.show()
+    # plt.plot(epochs, [val[1] for val in metric])
+    # plt.show()
