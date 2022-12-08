@@ -2,7 +2,6 @@ import pandas as pd
 import torch
 from torch.utils.data import Dataset, DataLoader
 from tqdm import tqdm
-import matplotlib.pyplot as plt
 
 class WaveDataset(Dataset):
     def __init__(self, files_path: pd.DataFrame, show_progress: bool=True, train: bool = True, resave: bool = False):

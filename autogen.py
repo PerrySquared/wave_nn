@@ -9,7 +9,6 @@ from tqdm import tqdm
 from random import randint
 from turtle import shape
 from algorithm import Wave_Route
-from perlin_noise import PerlinNoise
 from random import uniform, randint
 
 
@@ -24,7 +23,6 @@ def validate_coords(pic, y, x):
 def rain_gen():
     
     pic = np.zeros((64, 64)) # size of pic matrix
-    max_drop_width = 2 # right border of drop width, min is always is 1
     max_drop_height = 28 # right border of drop height, min is always is 1
     drop_margin = 2 # margin around of drop, min is always is 1
     section_width = 64 # width of a section
@@ -53,23 +51,6 @@ def rain_gen():
     return pic
 
 def generator():
-    
-    # noise = PerlinNoise(octaves=12)
-    
-    # pic = np.zeros((0 ,xpix))
-    # for i in range(xpix):
-    #     row = np.array([])
-    #     for j in range(ypix):
-        
-    #         noise_val = noise([i/xpix, j/ypix])
-            
-    #         if noise_val < -0.1: # point of switch from obstacle to free space
-    #             noise_val = -1
-    #         else:
-    #             noise_val = 0
-            
-    #         row = np.append(row, noise_val)
-    #     pic = np.append(pic, [row], axis=0)
     
     pic = (rain_gen() + rain_gen().transpose()).clip(0, 1)
     pic[pic == 1] = -1
@@ -105,19 +86,16 @@ path_solution = "data_solved"
 files = []
 wave_lengths = []
 
-for i in tqdm(range(50000)):
+for i in tqdm(range(100000)):
     
     task, solution, wave_number = 0, 0, 0
     task, solution, wave_number = generator()
 
     wave_lengths.append(wave_number)
     name = i
-
+    # print(task.shape)
     task = np.expand_dims(task, axis=-1)
-    tmp = task
-    task = np.append(task, tmp, axis = -1)
-    task = np.append(task, tmp, axis = -1)
-            
+
     torch.save(torch.tensor(task, dtype = torch.float).permute((2,0,1)), os.path.join(path_task, str(name)))
     torch.save(torch.tensor(solution, dtype = torch.long), os.path.join(path_solution, str(name)))
     
@@ -125,7 +103,6 @@ for i in tqdm(range(50000)):
     
 
 wave_lengths = np.array(wave_lengths)
-#print("\n", "max_length = ", wave_lengths.max(), "\n", "min_length = ", wave_lengths.min(), "\n", "lengths_mean = ", wave_lengths.mean(), "\n")
 
 df = pd.DataFrame(data=files, columns=['source', 'target'])
 df.to_csv("data.csv")

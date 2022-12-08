@@ -1,7 +1,5 @@
 import numpy as np
 
-# np.set_printoptions(precision=1e-2, edgeitems=sys.maxsize)
-
 # 0 - free space
 # int > 0 - path
 # -1 - obstacle
