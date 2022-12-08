@@ -34,8 +34,10 @@
 
 
 ## Screenshots
-![Accuracy plot](./other/Figure_2.png)
-![Prediction example](./other/prediction_example.png)
+<p align="center">
+  <img width="600" height="600" src="./other/Figure_2.png">
+  <img width="600" height="600" src="./other/prediction_example.png">
+</p>
 
 
 
