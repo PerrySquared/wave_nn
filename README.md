@@ -6,6 +6,7 @@
 * [Technologies Used](#technologies-used)
 * [Features](#features)
 * [Screenshots](#screenshots)
+* [Performance](#performance)
 * [Setup and usage](#setup-and-usage)
 * [Room for Improvement](#room-for-improvement)
 * [Contact](#contact)
@@ -44,7 +45,11 @@
 <p align="center"> Prediction example </p>
 
 
-
+## Performance
+The difference in speed is obvious even on reasonably small datasets
+Plotting routes with Lee Algorithm for a dataset with 1000 elements took 40 seconds
+Plotting routes for the same dataset but with trained model only took 3 seconds
+It's more than 13 times faster
 
 ## Setup and usage
 Requirements are listed under * [Technologies Used](#technologies-used)
