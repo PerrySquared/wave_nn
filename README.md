@@ -34,7 +34,8 @@
 
 
 ## Screenshots
-![Accuracy plot](./wave_nn/other/Figure_2.png)
+![Accuracy plot](./other/Figure_2.png)
+![Prediction example](./other/prediction_example.png)
 
 
 
