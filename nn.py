@@ -110,7 +110,7 @@ if __name__ == '__main__':
     print(device)
     
     aux_params = dict(
-        dropout = 0.15,
+        dropout = 0.10,
         classes=1,
         activation="tanh"
     )
@@ -129,7 +129,7 @@ if __name__ == '__main__':
     metric = np.zeros((0, 2))
     image_number = 0
     
-    epochs = 40
+    epochs = 100
     
     for i in range(epochs):
         train_loss = np.array([])
@@ -162,15 +162,16 @@ if __name__ == '__main__':
                     
                     # print(out[0], "\n=====", out[1])
                     temp_out = out[0].cpu()
+                    temp_mask = mask.cpu()
 
                     valid_loss = np.append(valid_loss, dice_coef(mask, out[0].float()).cpu().detach().numpy())
                     
             image_number+=1
             image = temp_out.permute(2, 3, 1, 0).squeeze().squeeze()
             image = torch.where(image > 0.5, 1.0, 0.0)
-            image = torch.nn.functional.softmax(image, 1)
-            image = image > 0.9
             
+            plt.imshow(temp_mask.permute(1, 2, 0).squeeze())
+            plt.savefig(os.path.join("data_out", "mask"), dpi=300)
             plt.imshow(image)
             plt.savefig(os.path.join("data_out", str(image_number)), dpi=300)
         
