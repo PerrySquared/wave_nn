@@ -14,7 +14,7 @@
 
 
 ## General Information
-- This project is created to train a neural network based on a generated dataset that takes two combined rain matrices (to roughly emulate how a proper chip layout would look like) and uses Lee Algorithm to make one route (if it exists) for each of them
+- This project is created to train a neural network based on a generated dataset that takes two combined rain matrices (to roughly emulate how a proper chip layout would look like) and uses Lee Algorithm to make one route (if it exists) for each one of them
 - Goal of this project is to see if a trained neural network can improve the speed of Lee Algorithm with minimal amount of defects
 
 
