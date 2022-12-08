@@ -68,7 +68,7 @@ To start using the project you will need to:
 
 
 ## Room for Improvement
-I feel that with enough time and patience model accuracy can be improved a bit, also adding support for batches in validation to generate images faster would be nice
+I feel that with enough time and patience model accuracy can be improved a bit, also adding support for batches in validation to generate images faster could be a nice addition
 
 
 # Contact
