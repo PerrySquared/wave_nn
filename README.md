@@ -40,7 +40,10 @@
 </p>
 <p align="center"> Accuracy plot </p>
 <p align="center">
-  <img width="600" height="500" src="./other/prediction_example.png">
+  <img width="600" height="500" src="./other/Figure_3.png">
+</p>
+<p align="center">
+  <img width="600" height="500" src="./other/prediction.png">
 </p>
 <p align="center"> Prediction example </p>
 
