@@ -56,7 +56,7 @@
 <p> It's more than 13 times faster </p>
 
 ## Setup and usage
-Requirements are listed under * [Technologies Used](#technologies-used)
+Requirements are listed under  [Technologies Used](#technologies-used)
 
 To start using the project you will need to:
 1. Download whole repository
