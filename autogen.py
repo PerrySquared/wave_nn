@@ -6,7 +6,6 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 from tqdm import tqdm
-from random import randint
 from turtle import shape
 from algorithm import Wave_Route
 from random import uniform, randint
@@ -80,22 +79,22 @@ def generator():
     return pic_copy, wave.output()[0], wave.output()[1]
 
  
-path_task = "data_task"
-path_solution = "data_solved"
+path_task = "./data_task"
+path_solution = "./data_solved"
 
 files = []
 wave_lengths = []
 
-for i in tqdm(range(100000)):
+for i in tqdm(range(1000)):
     
     task, solution, wave_number = 0, 0, 0
     task, solution, wave_number = generator()
 
     wave_lengths.append(wave_number)
     name = i
-    # print(task.shape)
     task = np.expand_dims(task, axis=-1)
-
+    # print(task.shape)
+    
     torch.save(torch.tensor(task, dtype = torch.float).permute((2,0,1)), os.path.join(path_task, str(name)))
     torch.save(torch.tensor(solution, dtype = torch.long), os.path.join(path_solution, str(name)))
     
