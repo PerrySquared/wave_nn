@@ -52,7 +52,7 @@
 ## Performance
 <p> The difference in speed is obvious even on a reasonably small dataset </p>
 <p> Plotting routes with Lee Algorithm for a dataset with 1000 elements took 40 seconds </p>
-<p> Plotting routes for the same dataset but with trained model only took 3 seconds </p>
+<p> Plotting routes for the same dataset, but with trained model only took 3 seconds </p>
 <p> It's more than 13 times faster </p>
 
 ## Setup and usage
