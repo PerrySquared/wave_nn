@@ -36,9 +36,9 @@
 ## Screenshots
 <p align="center">
   <img width="600" height="400" src="./other/Figure_2.png">
-  <figcaption> Accuracy plot </figcaption>
+  <p> Accuracy plot </p>
   <img width="600" height="500" src="./other/prediction_example.png">
-  <figcaption> Prediction example </figcaption>
+  <p> Prediction example </p>
 </p>
 
 
