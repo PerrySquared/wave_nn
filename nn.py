@@ -17,7 +17,7 @@ import segmentation_models_pytorch.losses as smpl
 
 
 def set_seed(seed=777):
-    '''Set seed for every random generator that used in project'''
+    # Set seed for every random generator that used in project
     np.random.seed(seed)
     random.seed(seed)
     torch.manual_seed(seed)
@@ -72,7 +72,7 @@ if __name__ == '__main__':
     dataset_train = WaveDataset(data_train)
     dataset_test = WaveDataset(data_test)
     dataloader_train = DataLoader(dataset=dataset_train, batch_size=64, shuffle=True)
-    dataloader_test = DataLoader(dataset=dataset_test, batch_size=1, shuffle=True)
+    dataloader_test = DataLoader(dataset=dataset_test, batch_size=64, shuffle=True)
 
 
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -130,20 +130,23 @@ if __name__ == '__main__':
                 source, mask = source.to(device), mask.to(device)
 
                 out = model(source)
-                image = torch.squeeze(out[0]).cpu()
 
                 valid_accuracy = np.append(valid_accuracy, dice_coef(mask, out[0].float()).cpu().detach().numpy())
                 
-                temp_mask = torch.squeeze(mask).cpu()
                 
-            image_number+=1
-            image = torch.where(image > 0.5, 1.0, 0.0)
+            #    commented part below was used to ckeck progress of training, works only with validation batch size = 1
+
+            #     image = torch.squeeze(out[0]).cpu()
+            #     temp_mask = torch.squeeze(mask).cpu()
+                
+            # image_number+=1
+            # image = torch.where(image > 0.5, 1.0, 0.0)
             
-            plt.imshow(temp_mask)
-            plt.savefig(os.path.join("data_out", str(image_number) + "_mask"), dpi=300)
-            plt.imshow(image)
-            plt.savefig(os.path.join("data_out", str(image_number)), dpi=300)       
-            plt.close()  
+            # plt.imshow(temp_mask)
+            # plt.savefig(os.path.join("./data_out", str(image_number) + "_mask"), dpi=300)
+            # plt.imshow(image)
+            # plt.savefig(os.path.join("./data_out", str(image_number)), dpi=300)       
+            # plt.close()  
         
 
         save_best_model(
