@@ -36,10 +36,13 @@
 ## Screenshots
 <p align="center">
   <img width="600" height="400" src="./other/Figure_2.png">
-  <p> Accuracy plot </p>
-  <img width="600" height="500" src="./other/prediction_example.png">
-  <p> Prediction example </p>
 </p>
+<p align="center"> Accuracy plot </p>
+<p align="center">
+  <img width="600" height="500" src="./other/prediction_example.png">
+</p>
+<p align="center"> Prediction example </p>
+
 
 
 
