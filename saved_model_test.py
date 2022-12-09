@@ -1,10 +1,8 @@
 from tqdm import tqdm
-from torch import nn
 from data import WaveDataset
 from torch.utils.data import Dataset, DataLoader
 from  sklearn.model_selection import train_test_split
 import torch
-import sys
 import os
 import random
 import numpy as np
@@ -33,13 +31,13 @@ if __name__ == '__main__':
     
     set_seed()
     
-    data_size = 1000
+    data_size = 100
     batch_size = 64
 
     data_test = pd.read_csv("data.csv", nrows=data_size)
 
     dataset_test = WaveDataset(data_test)
-    dataloader_test = DataLoader(dataset=dataset_test, batch_size=batch_size, shuffle=True)
+    dataloader_test = DataLoader(dataset=dataset_test, batch_size=batch_size, shuffle=False)
 
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')    
     print(device)
@@ -62,7 +60,6 @@ if __name__ == '__main__':
     
     
     name = 0
-    image_number = 0
 
     model.to(device)
     model.eval()
@@ -72,7 +69,6 @@ if __name__ == '__main__':
         for source, mask in tqdm(dataloader_test):
             
             source, mask = source.to(device), mask.to(device)
-            
             out = model(source)
             out = torch.squeeze(out[0])
        
@@ -85,14 +81,15 @@ if __name__ == '__main__':
                 
                 # code below was used to generate images, but commented for the sake of benchmarking
                 
-                
+                # source = torch.squeeze(source).cpu()              
                 # mask = torch.squeeze(mask).cpu()
+                
                 # image = out.cpu()
-                # image = torch.where(image > 0.5, 1.0, 0.0)
+                # image = torch.where(image > 0, 1.0, 0.0)
 
-                # plt.imshow(mask[i])
+                # plt.imshow(mask[i] + source[i])
                 # plt.savefig(os.path.join("data_out_trained/images", str(name) + "_mask"), dpi=300)
-                # plt.imshow(image[i])
+                # plt.imshow(image[i] + source[i])
                 # plt.savefig(os.path.join("data_out_trained/images", str(name) + "_predicted"), dpi=300)
                 # plt.close()  
         
