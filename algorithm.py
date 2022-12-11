@@ -22,32 +22,35 @@ class Wave_Route:
         row_len, column_len = array.shape
         new_positions_found = 0
         
+        # outer IF elements validate position of the current state being -1 to every border
+        # to prevent going over them with the next step
+        
         if y > 0:
             if array[y - 1, x] == 0:
                 array[y - 1, x] = index
                 new_positions_found += 1           
-            if array[y - 1, x] == -3: # exit condition check
+            if array[y - 1, x] == -3: # exit condition (contact end) check
                 return array, True, new_positions_found
             
         if y < row_len - 1:
             if array[y + 1, x] == 0:
                 array[y + 1, x] = index
                 new_positions_found += 1                        
-            if array[y + 1, x] == -3: # exit condition check
+            if array[y + 1, x] == -3: # exit condition (contact end) check
                     return array, True, new_positions_found
                 
         if x > 0:
             if array[y, x - 1] == 0:
                 array[y, x - 1] = index   
                 new_positions_found += 1                  
-            if array[y, x - 1] == -3: # exit condition check
+            if array[y, x - 1] == -3: # exit condition (contact end) check
                     return array, True, new_positions_found        
        
         if x < column_len - 1:
             if array[y, x + 1] == 0:
                 array[y, x + 1] = index 
                 new_positions_found += 1           
-            if array[y, x + 1] == -3: # exit condition check
+            if array[y, x + 1] == -3: # exit condition (contact end) check
                     return array, True, new_positions_found
         
         
@@ -103,6 +106,13 @@ class Wave_Route:
 
         for i in range(wave_number, -1, -1):
 
+            # block below checks the positions for the next step of wave algorithm
+            # 0 x 0
+            # x c x
+            # 0 x 0
+            # x - checked positions
+            # c - current position
+            
             if y > 0:
                 if array[y - 1, x] == i:         
                     path = np.append(path, [[y - 1, x]], axis=0)

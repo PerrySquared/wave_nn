@@ -1,10 +1,8 @@
 from tqdm import tqdm
-from torch import nn
 from data import WaveDataset
 from torch.utils.data import Dataset, DataLoader
 from  sklearn.model_selection import train_test_split
 import torch
-import time
 import os
 import random
 import numpy as np
@@ -78,12 +76,12 @@ if __name__ == '__main__':
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     print(device)
     
+    
     aux_params = dict(
         dropout = 0.70,
         classes=1,
         activation="tanh"
     )
-
     
     model = smp.Unet(encoder_name="vgg16", encoder_weights="imagenet", encoder_depth=5,
                      in_channels=1, decoder_attention_type="scse", aux_params=aux_params).to(device)
@@ -91,6 +89,7 @@ if __name__ == '__main__':
     optimizer = torch.optim.Adam(model.parameters(), lr=0.3e-3, weight_decay=1e-6)
     scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=7000, eta_min=1e-6)
     DiceLoss = smpl.DiceLoss(mode='multilabel')
+    
 
     def criterion(input_masks, target_masks):
         return DiceLoss(input_masks, target_masks)
