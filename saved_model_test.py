@@ -26,12 +26,25 @@ def set_seed(seed=777):
 
     os.environ['PYTHONHASHSEED'] = str(seed)
 
+def is_path_not_defected(y_true, y_pred):
+
+    y_pred = torch.where(y_pred > -10, 1.0, 0.0)
+    plt.imshow(y_pred.cpu())
+    plt.show()
+    comparison = y_pred - y_true
+
+    for row in comparison:
+        for element in row:
+            if element == -1:
+                return 0
+        
+    return 1
 
 if __name__ == '__main__':
     
     set_seed()
     
-    data_size = 100
+    data_size = 10
     batch_size = 64
 
     data_test = pd.read_csv("data.csv", nrows=data_size)
@@ -63,6 +76,7 @@ if __name__ == '__main__':
 
     model.to(device)
     model.eval()
+    valid_accuracy = np.array([])
     
     with torch.no_grad():
         
@@ -77,7 +91,8 @@ if __name__ == '__main__':
                 name += 1
 
                 torch.save(out[i].clone().detach(), os.path.join("./data_out_trained/tensors", str(name)))
-                
+
+                # valid_accuracy = np.append(valid_accuracy, is_path_not_defected(mask[i], out[i]))
                 
                 # code below was used to generate images, but commented for the sake of benchmarking
                 
@@ -92,6 +107,7 @@ if __name__ == '__main__':
                 # plt.imshow(image[i] + source[i])
                 # plt.savefig(os.path.join("data_out_trained/images", str(name) + "_predicted"), dpi=300)
                 # plt.close()  
-        
+                
+#    print(valid_accuracy.mean())   
             
 
