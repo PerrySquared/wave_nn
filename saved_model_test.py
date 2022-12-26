@@ -25,26 +25,76 @@ def set_seed(seed=777):
     torch.backends.cudnn.benchmark = False
 
     os.environ['PYTHONHASHSEED'] = str(seed)
+    
+def recursive_search(comb, current_column, current_row):
+    
+    possibilities = 0
+    row_len, column_len = comb.shape
 
-def is_path_not_defected(y_true, y_pred):
-
-    y_pred = torch.where(y_pred > -10, 1.0, 0.0)
-    plt.imshow(y_pred.cpu())
-    plt.show()
-    comparison = y_pred - y_true
-
-    for row in comparison:
-        for element in row:
-            if element == -1:
-                return 0
+    if current_column > 0:
+        if comb[current_column - 1, current_row] == 2:
+            return 1
+        if comb[current_column - 1, current_row] == 1:
+            possibilities += 1
+            comb[current_column, current_row] = 0
+            return recursive_search(comb, current_column - 1, current_row)
         
-    return 1
+    if current_column < column_len - 1:
+        if comb[current_column + 1, current_row] == 2:
+            return 1 
+        if comb[current_column + 1, current_row] == 1:
+            possibilities += 1  
+            comb[current_column, current_row] = 0
+            return recursive_search(comb, current_column+1, current_row)     
+        
+        
+    if current_row > 0:
+        if comb[current_column, current_row - 1] == 2:
+            return 1   
+        if comb[current_column, current_row - 1] == 1:
+            possibilities += 1  
+            comb[current_column, current_row] = 0
+            return recursive_search(comb, current_column, current_row-1)      
+        
+    if current_row < row_len - 1:
+        if comb[current_column, current_row + 1] == 2:
+            return 1
+        if comb[current_column, current_row + 1] == 1:
+            possibilities += 1  
+            comb[current_column, current_row] = 0
+            return recursive_search(comb, current_column, current_row+1)
+    
+    if possibilities == 0:
+        return 0
+
+
+def defection_check(source, predict):
+
+    source, predict = source.cpu().squeeze(), predict.cpu()
+    start_row, start_column = 0, 0
+
+    predict = torch.where(predict > -5, 1.0, 0.0)
+
+    row_len, column_len = source.shape
+    
+    for row in range(row_len):
+        for column in range(column_len):
+            if source[column, row] > 0.666 and source[column, row] < 0.668:
+                start_row = row
+                start_column = column
+    
+    comb = source + predict
+    current_row, current_column = start_row, start_column
+    
+    defect = recursive_search(comb, current_column, current_row)
+     
+    return defect  
 
 if __name__ == '__main__':
     
     set_seed()
     
-    data_size = 10
+    data_size = 10000
     batch_size = 64
 
     data_test = pd.read_csv("data.csv", nrows=data_size)
@@ -77,6 +127,8 @@ if __name__ == '__main__':
     model.to(device)
     model.eval()
     valid_accuracy = np.array([])
+    path_lengts_avg_mask = np.array([])
+    path_lengts_avg_pred = np.array([])
     
     with torch.no_grad():
         
@@ -89,10 +141,14 @@ if __name__ == '__main__':
             for i in range(len(mask)):
                 
                 name += 1
-
+                
                 torch.save(out[i].clone().detach(), os.path.join("./data_out_trained/tensors", str(name)))
 
-                # valid_accuracy = np.append(valid_accuracy, is_path_not_defected(mask[i], out[i]))
+                path_lengts_avg_mask = np.append(path_lengts_avg_mask, mask[i].cpu().sum())
+                # path_lengts_avg_pred = np.append(path_lengts_avg_pred, torch.where(out[i] > -5, 1.0, 0.0).cpu().sum())
+                
+                # if(mask[i].sum() > 0):     
+                #     valid_accuracy = np.append(valid_accuracy, defection_check(source[i], out[i]))
                 
                 # code below was used to generate images, but commented for the sake of benchmarking
                 
@@ -108,6 +164,6 @@ if __name__ == '__main__':
                 # plt.savefig(os.path.join("data_out_trained/images", str(name) + "_predicted"), dpi=300)
                 # plt.close()  
                 
-#    print(valid_accuracy.mean())   
-            
-
+print(valid_accuracy.mean())   
+print(path_lengts_avg_mask.mean())           
+# print(path_lengts_avg_pred.mean())    
