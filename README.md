@@ -46,8 +46,8 @@
 
 
 ## Performance
-<p> 13 times runtime imrovement at the cost of having only 40% correct paths (i.e. 2 points connected wihout breaks), </p>
-<p> must be used alongside algotithms with 100% accuracy to compensate for the unsuccessful 60% for any practical purposes </p>
+<p> 13 times runtime imrovement at the cost of having breaks in some paths, </p>
+<p> must be used alongside algotithms with 100% accuracy to compensate for unsuccesful preditions </p>
 
 ## Setup and usage
 Requirements are listed under  [Technologies Used](#technologies-used)
