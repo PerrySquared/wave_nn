@@ -30,7 +30,7 @@
 ## Features
 - The ability to generate datasets with different parameters
 - Trained model can be saved and exported
-- Performance of the algorithm and trained model can be measured and compared
+- Performance of the algorithm and trained model can be measured 
 - Support for creating images on different stages of the process to help with visualisation of data
 
 
@@ -50,26 +50,16 @@
 
 
 ## Performance
-<p> The difference in speed is obvious even on a reasonably small dataset </p>
-<p> Plotting routes with Lee Algorithm for a dataset with 1000 elements took 40 seconds </p>
-<p> Plotting routes for the same dataset, but with trained model only took 3 seconds </p>
-<p> It's more than 13 times faster </p>
+<p> 13 times runtime imrovement at the cost of having only 40% correct paths, </p>
+<p> must be used alongside already working algotithms for any practical purposes </p>
 
 ## Setup and usage
 Requirements are listed under  [Technologies Used](#technologies-used)
 
 To start using the project you will need to:
-1. Download whole repository
-2. If needed, uncomment parts of code that are used for saving images
-3. Open anaconda terminal in the main folder
+1. Download the repository
+2. Install anaconda terminal
 4. Generate the dataset via autogen.py
 5. Train the neural network via nn.py
 6. Best model checkpoint data will be saved in a .pth file which can be used for testing in saved_model_test.py
 
-
-## Room for Improvement
-I feel that with enough time and patience model accuracy can be improved a bit, also adding support for batches in validation to generate images faster could be a nice addition
-
-
-# Contact
-Created by [PerrySquared](https://github.com/PerrySquared)
