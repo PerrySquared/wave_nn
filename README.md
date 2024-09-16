@@ -46,8 +46,9 @@
 
 
 ## Performance
-<p> 13 times runtime imrovement at the cost of having breaks in some paths, </p>
+<p> 13 times runtime imrovement at the cost of having breaks in some paths (~10%), </p>
 <p> must be used alongside algotithms with 100% accuracy to compensate for unsuccesful preditions </p>
+<p> future improvements might be possible, but to make this method viable on its own a new approach is probably needed </p>
 
 ## Setup and usage
 Requirements are listed under  [Technologies Used](#technologies-used)
