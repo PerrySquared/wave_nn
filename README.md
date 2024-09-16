@@ -36,10 +36,6 @@
 
 ## Screenshots
 <p align="center">
-  <img width="600" height="400" src="./other/Figure_2.png">
-</p>
-<p align="center"> Accuracy plot </p>
-<p align="center">
   <img width="600" height="600" src="./other/Figure_3.png">
 </p>
 <p align="center"> Source matrix example </p>
@@ -50,8 +46,8 @@
 
 
 ## Performance
-<p> 13 times runtime imrovement at the cost of having only 40% correct paths, </p>
-<p> must be used alongside already working algotithms for any practical purposes </p>
+<p> 13 times runtime imrovement at the cost of having only 40% correct paths (i.e. 2 points connected wihout breaks), </p>
+<p> must be used alongside algotithms with 100% accuracy to compensate for the unsuccessful 60% for any practical purposes </p>
 
 ## Setup and usage
 Requirements are listed under  [Technologies Used](#technologies-used)
